@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Data Science</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .navbar a {
+            display: inline-block;
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        .navbar a:hover {
+            background-color: #575757;
+        }
+        .navbar a.active {
+            background-color: #007bff;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .content-section {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            display: none;
+        }
+        #results, #forecasting-results {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            display: none;
+        }
+        #results h2, #forecasting-results h2 {
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .section h3 {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+            display: none;
+        }
+        /* Style dla input file */
+        input[type="file"] {
+            display: block;
+            margin: 15px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            width: fit-content;
+        }
+        label {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        /* Style dla tabel */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#demo" class="active" onclick="showSection('demo', this)">Demo</a>
+        <a href="#forecasting" onclick="showSection('forecasting', this)">Forecasting</a>
+        <a href="#classification" onclick="showSection('classification', this)">Klasyfikacja</a>
+    </div>
+
+    <div class="container">
+        <div id="demo-section" class="content-section" style="display: block;">
+            <h1>Witaj na Stronie Demo Data Science</h1>
+            <p style="text-align: center; font-size: 1.1em;">
+                Kliknij przycisk poniżej, aby uruchomić prosty przykład analizy danych i zobaczyć wyniki.
+            </p>
+            <button id="startDemoBtn">Start Demo</button>
+
+            <div class="loading" id="loadingMessage">
+                Ładowanie danych i generowanie wyników... Proszę czekać.
+            </div>
+
+            <div id="results">
+                <h2>Wyniki Demo Data Science</h2>
+
+                <div class="section">
+                    <h3>Opis Procesu EDA</h3>
+                    <pre id="descriptionText"></pre>
+                </div>
+
+                <div class="section">
+                    <h3>Pierwsze 5 wierszy danych (data_head)</h3>
+                    <div id="dataHeadTable"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Ostatnie 5 wierszy danych (data_tail)</h3>
+                    <div id="dataTailTable"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Podsumowanie Statystyczne (data_description)</h3>
+                    <div id="dataDescriptionTable"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Skośność Kolumn Numerycznych (skewness_data)</h3>
+                    <div id="skewnessDataTable"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Kurtoza Kolumn Numerycznych (kurtosis_data)</h3>
+                    <div id="kurtosisDataTable"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Analiza Korelacji</h3>
+                    <div id="korelacjaDataTable"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Macierz Korelacji Kolumn Numerycznyc.</h3>
+                    <img id="korelacja" src="" alt="Macierz Korelacji Kolumn Numerycznyc.">
+                </div>
+
+
+                <div class="section">
+                    <h3>Wykresy Dystrybucji (Histogramy)</h3>
+                    <img id="histogramPlot" src="" alt="Wykresy histogramów">
+                </div>
+
+                <div class="section">
+                    <h3>Wykresy Rozkładu (Box Ploty)</h3>
+                    <img id="boxplotPlot" src="" alt="Wykresy Box Plotów">
+                </div>
+
+                <div class="section">
+                    <h3>Wykres Cen Akcji w Czasie</h3>
+                    <img id="priceChart" src="" alt="Wykres cen akcji">
+                </div>
+
+
+                <div class="section">
+                    <h3>Opis Features</h3>
+                    <pre id="descriptionTextfe"></pre>
+                </div>
+
+
+
+                <div class="section">
+                    <h3>Wyglada Dataframe po featueres</h3>
+                    <div id="datafeatur"></div>
+                </div>
+
+
+                <div class="section">
+                    <h3>korelacja po featues</h3>
+                    <img id="korelacjafe" src="" alt="Wykres cen akcji">
+                </div>
+
+                    <div class="section">
+                    <h3>Opis Pracy modelu</h3>
+                    <pre id="descriptionmodel"></pre>
+
+                </div>
+                <div class="section">
+                    <h3>Wyniki</h3>
+                    <div id="resultsmodels"></div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <div id="forecasting-section" class="content-section">
+            <h1>Forcasting Wybranej Spółki</h1>
+            <p style="text-align: center; font-size: 1.1em;">
+                Wybierz spółkę z listy, aby przeprowadzić kompleksową analizę danych historycznych i wskaźników technicznych.
+            </p>
+            <form id="companyAnalysisForm">
+                <label for="companySelect">Wybierz spółkę:</label>
+                <select id="companySelect" name="company">
+                    <option value="">-- Wybierz firmę --</option>
+                </select>
+                <button type="submit">Uruchom Analizę Spółki</button>
+            </form>
+
+            <div class="loading" id="companyLoadingMessage">
+                Ładowanie danych i generowanie wyników dla wybranej firmy... Proszę czekać.
+            </div>
+
+            <div id="results-company" style="display: none;">
+                <h2>Wyniki Analizy Danych Finansowych dla Spółki</h2>
+
+                <div class="section">
+                    <h3>Opis Procesu EDA</h3>
+                    <pre id="descriptionText-company"></pre>
+                </div>
+
+                <div class="section">
+                    <h3>Pierwsze 5 wierszy danych (data_head)</h3>
+                    <div id="dataHeadTable-company"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Ostatnie 5 wierszy danych (data_tail)</h3>
+                    <div id="dataTailTable-company"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Podsumowanie Statystyczne (data_description)</h3>
+                    <div id="dataDescriptionTable-company"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Skośność Kolumn Numerycznych (skewness_data)</h3>
+                    <div id="skewnessDataTable-company"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Kurtoza Kolumn Numerycznych (kurtosis_data)</h3>
+                    <div id="kurtosisDataTable-company"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Macierz Korelacji Kolumn Numerycznych.</h3>
+                    <img id="korelacja-company" src="" alt="Macierz Korelacji Kolumn Numerycznych.">
+                </div>
+
+                <div class="section">
+                    <h3>Wykresy Dystrybucji (Histogramy)</h3>
+                    <img id="histogramPlot-company" src="" alt="Wykresy histogramów">
+                </div>
+
+                <div class="section">
+                    <h3>Wykresy Rozkładu (Box Ploty)</h3>
+                    <img id="boxplotPlot-company" src="" alt="Wykresy Box Plotów">
+                </div>
+
+                <div class="section">
+                    <h3>Wykres Cen Akcji w Czasie z Wskaźnikami Technicznymi</h3>
+                    <img id="priceChart-company" src="" alt="Wykres cen akcji">
+                </div>
+
+                <div class="section">
+                    <h3>Opis Inżynierii Cech</h3>
+                    <pre id="descriptionTextfe-company"></pre>
+                </div>
+
+                <div class="section">
+                    <h3>Wygląd DataFrame po Inżynierii Cech</h3>
+                    <div id="datafeatur-company"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Macierz Korelacji po Inżynierii Cech</h3>
+                    <img id="korelacjafe-company" src="" alt="Macierz Korelacji po Inżynierii Cech">
+                </div>
+
+                <div class="section">
+                    <h3>Opis Pracy Modeli Regresyjnych</h3>
+                    <pre id="descriptionmodel-company"></pre>
+                </div>
+                <div class="section">
+                    <h3>Wyniki Oceny Modeli Regresyjnych</h3>
+                    <div id="resultsmodels-company"></div>
+                </div>
+            </div>
+
+            <div id="classification-section" class="content-section">
+                <h1>Sekcja Klasyfikacja</h1>
+                <p style="text-align: center; font-size: 1.1em;">
+                    Tutaj znajdą się narzędzia i wyniki związane z klasyfikacją.
+                </p>
+                <button onclick="alert('Funkcja Klasyfikacji będzie dostępna wkrótce!')">Uruchom Klasyfikację</button>
+            </div>
+
+    </div>
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+    <script>
+        // Funkcja do pokazywania/ukrywania sekcji
+            function showSection(sectionPrefix, clickedElement) {
+        // Ukryj wszystkie sekcje
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // Usuń klasę 'active' ze wszystkich linków nawigacyjnych
+        document.querySelectorAll('.navbar a').forEach(link => {
+            link.classList.remove('active');
+        });
+
+        // Pokaż wybraną sekcję (np. 'demo-section', 'forecasting-section', 'classification-section')
+        const targetSectionId = sectionPrefix + '-section';
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+        } else {
+            console.error(`Błąd: Sekcja o ID '${targetSectionId}' nie została znaleziona. Upewnij się, że ID w HTML jest poprawne.`);
+        }
+
+        // Dodaj klasę 'active' do klikniętego linku nawigacyjnego
+        if (clickedElement) {
+            clickedElement.classList.add('active');
+        }
+    }
+
+        // Funkcja do dynamicznego tworzenia tabel z list słowników
+        function createTable(data, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`Błąd: Kontener o ID '${containerId}' nie został znaleziony dla tabeli. Sprawdź, czy ID jest poprawne w HTML.`);
+            return;
+        }
+        container.innerHTML = ''; // Wyczyść poprzednią zawartość
+
+        if (!data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && Object.keys(data).length === 0)) {
+            container.innerHTML = "<p>Brak danych do wyświetlenia.</p>";
+            return;
+        }
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+
+        let headers;
+        if (Array.isArray(data)) {
+            headers = Object.keys(data[0]);
+        } else if (typeof data === 'object' && data !== null) {
+            headers = Object.keys(data);
+            data = [data]; // Konwertuj pojedynczy obiekt na tablicę do iteracji
+        } else {
+            container.innerHTML = "<p>Nieprawidłowy format danych do wyświetlenia w tabeli.</p>";
+            return;
+        }
+
+        // Nagłówki tabeli
+        const headerRow = document.createElement('tr');
+        headers.forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Wiersze danych
+        data.forEach(rowData => {
+            const tr = document.createElement('tr');
+            headers.forEach(headerText => {
+                const td = document.createElement('td');
+                let value = rowData[headerText];
+                if (typeof value === 'number') {
+                    td.textContent = value.toFixed(4);
+                } else if (typeof value === 'object' && value !== null) {
+                    td.textContent = JSON.stringify(value, null, 2);
+                } else {
+                    td.textContent = value;
+                }
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        container.appendChild(table);
+    }
+
+
+        async function loadCompanyNames() {
+            try {
+                // Wywołaj endpoint FastAPI do pobrania nazw firm
+                const response = await fetch('/get-company-names');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const companyNames = await response.json(); // Otrzymaj listę nazw firm
+
+                const companySelect = document.getElementById('companySelect');
+
+                // Wyczyść istniejące opcje (poza domyślną "Wybierz firmę")
+                companySelect.innerHTML = '<option value="">-- Wybierz firmę --</option>';
+
+                // Dodaj każdą nazwę firmy jako nową opcję w <select>
+                companyNames.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;        // Wartość, która zostanie wysłana do backendu
+                    option.textContent = name;  // Tekst wyświetlany w dropdownie
+                    companySelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Błąd podczas ładowania nazw firm:', error);
+                // Wyświetl użytkownikowi komunikat o błędzie
+                alert('Nie udało się załadować listy firm. Sprawdź konsolę przeglądarki.');
+            }
+        }
+
+        // Uruchom funkcję loadCompanyNames, gdy strona zostanie w pełni załadowana
+        document.addEventListener('DOMContentLoaded', () => {
+            // Możesz ustawić, która sekcja ma być domyślnie widoczna
+            showSection('forecasting', document.querySelector('.navbar a[href="#forecasting"]'));
+            loadCompanyNames(); // To jest kluczowe!
+        });
+
+
+
+
+        // --- Logika dla Demo Data Science ---
+        document.getElementById('startDemoBtn').addEventListener('click', async () => {
+            const resultsDiv = document.getElementById('results');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const startButton = document.getElementById('startDemoBtn');
+
+            // Ukryj poprzednie wyniki i pokaż loader
+            resultsDiv.style.display = 'none';
+            loadingMessage.style.display = 'block';
+            startButton.disabled = true;
+
+            try {
+                // Endpoint FastAPI, który zwraca wyniki EDA
+                const response = await fetch('/run-demo');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json(); // Parsowanie odpowiedzi JSON
+
+                // Wstawianie opisu procesu EDA
+                document.getElementById('descriptionText').innerText = data.description;
+
+
+                // Wstawianie opisu procesu featres
+                document.getElementById('descriptionTextfe').innerText = data.descriptionfe;
+
+
+                // Wstawianie opisu procesu modelu
+                document.getElementById('descriptionmodel').innerText = data.descriptionmodel;
+
+                // Wstawianie danych tabelarycznych
+                createTable(data.data_head, 'dataHeadTable');
+                createTable(data.data_tail, 'dataTailTable');
+                createTable(data.data_description, 'dataDescriptionTable');
+                createTable(data.skewness_data, 'skewnessDataTable');
+                createTable(data.kurtosis_data, 'kurtosisDataTable');
+                createTable(data.korelacja_DataTable, 'korelacjaDataTable');
+                createTable(data.data_featur, 'datafeatur');
+                createTable(data.results_models, 'resultsmodels');
+
+
+
+                // Wstawianie obrazów Base64
+                document.getElementById('korelacja').src = "data:image/png;base64," + data.korelacja_plot_base64;
+                document.getElementById('histogramPlot').src = "data:image/png;base64," + data.histogram_plot_base64;
+                document.getElementById('boxplotPlot').src = "data:image/png;base64," + data.boxplot_plot_base64;
+                document.getElementById('priceChart').src = "data:image/png;base64," + data.combined_price_indicators_chart_base64; // Nowy wykres cen
+                document.getElementById('korelacjafe').src = "data:image/png;base64," + data.korelacja_featt_base64; // Nowy wykres cen
+
+                // Pokaż sekcję wyników
+                resultsDiv.style.display = 'block';
+
+            } catch (error) {
+                console.error('Błąd podczas uruchamiania demo EDA:', error);
+                alert('Wystąpił błąd podczas ładowania demo EDA. Sprawdź konsolę przeglądarki.');
+            } finally {
+                // Ukryj loader i włącz przycisk
+                loadingMessage.style.display = 'none';
+                startButton.disabled = false;
+            }
+        });
+
+         // --- Logika dla Analizy Danych Finansowych Wybranej Spółki (sekcja 'forecasting') ---
+    document.getElementById('companyAnalysisForm').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Zapobiegaj domyślnej wysyłce formularza
+
+        const companySelect = document.getElementById('companySelect');
+        const selectedCompany = companySelect ? companySelect.value : '';
+
+        const resultsDiv = document.getElementById('results-company'); // Kontener wyników dla Analizy Spółek
+        const loadingMessage = document.getElementById('companyLoadingMessage'); // Loader dla Analizy Spółek
+        const submitButton = document.querySelector('#companyAnalysisForm button[type="submit"]');
+
+        if (!selectedCompany) {
+            alert('Proszę wybrać spółkę z listy.');
+            return;
+        }
+
+        // Ukryj poprzednie wyniki i pokaż komunikat ładowania
+        if (resultsDiv) resultsDiv.style.display = 'none';
+        if (loadingMessage) loadingMessage.style.display = 'block';
+        if (submitButton) submitButton.disabled = true;
+
+        try {
+            const response = await fetch(`/analyze-company?company_name=${encodeURIComponent(selectedCompany)}`);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Błąd HTTP ${response.status}: ${errorData.error || 'Nieznany błąd serwera'}`);
+            }
+
+            const data = await response.json();
+
+            // Wstawianie opisów
+            document.getElementById('descriptionText-company').innerText = data.description_eda || 'Brak opisu EDA.';
+            document.getElementById('descriptionTextfe-company').innerText = data.description_features || 'Brak opisu cech.';
+            document.getElementById('descriptionmodel-company').innerText = data.description_model || 'Brak opisu modelu.';
+
+            // Wstawianie danych tabelarycznych
+            createTable(data.data_head2, 'dataHeadTable-company');
+            createTable(data.data_tail2, 'dataTailTable-company');
+            createTable(data.data_description2, 'dataDescriptionTable-company');
+            createTable(data.skewness_data2, 'skewnessDataTable-company');
+            createTable(data.kurtosis_data2, 'kurtosisDataTable-company');
+            // Zwróć uwagę, czy backend zwraca 'korelacja_DataTable' czy 'correlation_matrix_table'
+            createTable(data.korelacja_DataTable2 || data.correlation_matrix_table, 'korelacjaDataTable-company');
+            createTable(data.data_featur2, 'datafeatur-company');
+            createTable(data.model_results, 'resultsmodels-company');
+
+            // Wstawianie obrazów Base64
+            document.getElementById('korelacja-company').src = data.korelacja2_plot_base64 ? "data:image/png;base64," + data.korelacja2_plot_base64 : '';
+            document.getElementById('histogramPlot-company').src = data.histogram2_plot_base64 ? "data:image/png;base64," + data.histogram2_plot_base64 : '';
+            document.getElementById('boxplotPlot-company').src = data.boxplot2_plot_base64 ? "data:image/png;base64," + data.boxplot2_plot_base64 : '';
+            document.getElementById('priceChart-company').src = data.combined_price_indicators2_chart_base64 ? "data:image/png;base64," + data.combined_price_indicators2_chart_base64 : '';
+            document.getElementById('korelacjafe-company').src = data.korelacja2_featt_base64 ? "data:image/png;base64," + data.korelacja2_featt_base64 : '';
+
+            // Pokaż sekcję wyników
+            if (resultsDiv) resultsDiv.style.display = 'block';
+
+        } catch (error) {
+            console.error('Błąd podczas uruchamiania analizy firmy:', error);
+            alert(`Wystąpił błąd podczas ładowania analizy firmy: ${error.message}. Sprawdź konsolę przeglądarki.`);
+        } finally {
+            if (loadingMessage) loadingMessage.style.display = 'none';
+            if (submitButton) submitButton.disabled = false;
+        }
+    });
+
+
+    // --- Logika dla Formularza Przesyłania Pliku (Oryginalna sekcja 'forecasting' / 'classification') ---
+    // WAŻNE: To jest osobna sekcja, jeśli masz formularz do przesyłania plików.
+    // Upewnij się, że masz w HTML formularz z ID "forecastingForm" oraz elementy wyników z ID odpowiednimi dla tej sekcji.
+    // Przykładowe ID dla tej sekcji: forecasting-results, forecastingLoadingMessage, forecastingDescription, forecastingPlot
+    const forecastingForm = document.getElementById('forecastingForm');
+    if (forecastingForm) { // Dodaj kontrolę, czy formularz istnieje
+        forecastingForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('forecastingFileInput');
+            const resultsDiv = document.getElementById('forecasting-results'); // ID dla wyników tej sekcji
+            const loadingMessage = document.getElementById('forecastingLoadingMessage'); // ID dla loadera tej sekcji
+            const submitButton = document.querySelector('#forecastingForm button[type="submit"]');
+
+            if (resultsDiv) resultsDiv.style.display = 'none';
+            if (loadingMessage) loadingMessage.style.display = 'block';
+            if (submitButton) submitButton.disabled = true;
+
+            const formData = new FormData();
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('file', fileInput.files[0]);
+            } else {
+                alert('Proszę wybrać plik CSV.');
+                if (loadingMessage) loadingMessage.style.display = 'none';
+                if (submitButton) submitButton.disabled = false;
+                return;
+            }
+
+            try {
+                const response = await fetch('/run-forecasting', { // Upewnij się, że to jest Twój poprawny endpoint dla przesyłania pliku
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Błąd HTTP! status: ${response.status}. Szczegóły: ${errorData.error || 'Brak dodatkowych informacji.'}`);
+                }
+
+                const data = await response.json();
+
+                document.getElementById('forecastingDescription').innerText = data.description || 'Brak opisu.';
+                document.getElementById('forecastingPlot').src = data.forecast_plot_base64 ? "data:image/png;base64," + data.forecast_plot_base64 : '';
+                // Jeśli zwracasz też tabele, użyj createTable z odpowiednimi ID (np. createTable(data.results_table, 'forecastingResultsTable');)
+
+                if (resultsDiv) resultsDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Błąd podczas uruchamiania prognozowania/klasyfikacji:', error);
+                alert('Wystąpił błąd podczas ładowania prognozowania/klasyfikacji. Sprawdź konsolę przeglądarki. Upewnij się, że plik CSV ma kolumny wymagane przez backend.');
+            } finally {
+                if (loadingMessage) loadingMessage.style.display = 'none';
+                if (submitButton) submitButton.disabled = false;
+            }
+        });
+    } else {
+        console.warn("Formularz 'forecastingForm' nie został znaleziony. Listener nie zostanie przypisany. Jeśli to sekcja 'classification', użyj odpowiedniego ID formularza.");
+    }
+
+
+    // Uruchom funkcje po załadowaniu strony
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ustaw domyślną sekcję na "Demo" i aktywuj odpowiedni link w navbarze
+        const defaultNavLink = document.querySelector('.navbar a[href="#demo"]');
+        if (defaultNavLink) {
+             showSection('demo', defaultNavLink);
+        } else {
+             // Fallback, jeśli nie ma linku dla 'demo' w navbarze, po prostu pokaż sekcję 'demo'
+             const demoSection = document.getElementById('demo-section');
+             if (demoSection) demoSection.style.display = 'block';
+        }
+
+        // Załaduj nazwy firm dla dropdownu w sekcji analizy spółek
+        loadCompanyNames();
+
+        // Dodaj listenery do linków nawigacyjnych
+        document.querySelectorAll('.navbar a').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Zapobiega domyślnej nawigacji przeglądarki
+                const sectionId = this.getAttribute('href').substring(1); // Pobierz ID sekcji bez '#'
+                showSection(sectionId, this);
+            });
+        });
+    });
+    </script>
