@@ -42,7 +42,7 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
     Otwórz terminal lub wiersz poleceń i przejdź do folderu, w którym chcesz zainstalować aplikację. Następnie wykonaj polecenie:
 
     ```bash
-    git clone  https://github.com/KawiorPL/FlaskApp.git
+    git clone https://github.com/KawiorPL/ForcastingStockPriceApple.git
      ```
     nastepnie
     ```bash
