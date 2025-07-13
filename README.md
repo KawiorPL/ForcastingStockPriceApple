@@ -46,7 +46,7 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
      ```
     nastepnie
     ```bash
-    cd FlaskApp
+    cd ForcastingStockPriceApple
      ```
    
 
@@ -59,8 +59,8 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
     Jeśli używasz Anacondy lub Minicondy:
 
     ```bash
-    conda create --name flask_env python=3.10.17
-    conda activate flask_env
+    conda create --name Apple_env python=3.10
+    conda activate Apple_env
     ```
 
     #### Opcja B: Użycie venv
@@ -78,14 +78,14 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
     source venv/bin/activate
     ```
 
-    Po aktywacji środowiska nazwa środowiska (`(flask_env)` lub `(venv)`) powinna pojawić się na początku linii poleceń.
+    Po aktywacji środowiska nazwa środowiska (`(Apple_env)` lub `(venv)`) powinna pojawić się na początku linii poleceń.
 
 4.  **Zainstaluj zależności:**
 
-    Po aktywowaniu środowiska przejdź do folderu `FlaskApp` (jeśli jeszcze tam nie jesteś) i zainstaluj wymagane biblioteki z pliku `requirements.txt`:
+    Po aktywowaniu środowiska przejdź do folderu `ForcastingStockPriceApple` (jeśli jeszcze tam nie jesteś) i zainstaluj wymagane biblioteki z pliku `requirements.txt`:
 
     ```bash
-    cd FlaskApp
+    cd ForcastingStockPriceApple
     pip install -r requirements.txt
     ```
 
