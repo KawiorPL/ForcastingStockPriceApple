@@ -1,0 +1,2 @@
+Model_SeqLength,RMSE,R2,Best Params
+LSTM_seq80,36220294.32385787,0.5676749102344731,"{'lstml_units': 32, 'dropout1': 0.2, 'lstm2_units': 64, 'dropout2': 0.1, 'learning_rate': 0.001}"

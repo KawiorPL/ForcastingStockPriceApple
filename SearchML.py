@@ -735,7 +735,6 @@ print("\nMożesz teraz użyć obiektu 'final_best_estimator' do przewidywań na 
 
 import joblib
 
-# --- DODAJ PONIŻSZĄ LINIĘ KODU, ABY ZAPISAĆ NAJLEPSZY MODEL ---
 model_filename = f'best_model_{best_model_name}.pkl' # Nazwa pliku z modelem
 joblib.dump(final_best_estimator, model_filename)
 print(f"\nNajlepszy model '{best_model_name}' został zapisany jako '{model_filename}'")

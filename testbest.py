@@ -13,18 +13,6 @@ import matplotlib.pyplot as plt # Do funkcji Visu
 
 
 
-import joblib
-import os
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
-from sklearn.preprocessing import StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.linear_model import HuberRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-import matplotlib.pyplot as plt
-
 
 def SaveTheBest():
     results = {}
@@ -292,7 +280,7 @@ def Features2(df_original, day):
 
 
 
-def Features3(df_original, day):
+def Features(df_original, day):
     """
     Generuje cechy (features) dla DataFrame na podstawie kolumny 'Adj Close'.
     Funkcja tworzy nowe kolumny cech bezpośrednio w modyfikowanym DataFrame.
@@ -367,7 +355,7 @@ def Features3(df_original, day):
 
 
 
-    return df#, dumy
+    return df
 
 
 
@@ -412,23 +400,7 @@ if os.path.exists(MODEL_FILE_PATH):
 
 
 
-dataframes={}
-dataframes[0]=dftest
 
-for i in range(len(days)):
-
-
-    dfFeature, dummy = Features3(dataframes[i],days[i])
-
-    predicted_value = loaded_model.predict(dummy)
-
-    predictdata = pd.DataFrame({'Adj Close':predicted_value}, index=[days[i]])
-
-    next = pd.concat([dataframes[i],predictdata])
-    dataframes[i+1]=next
-
-
-y_pred=dataframes[21]['2024-12-02':]
 
 #######################
 
@@ -446,7 +418,7 @@ i=0
 for i in range(len(days)):
 
 
-    dfFeature = Features3(data,days[i])
+    dfFeature = Features(data,days[i])
 
     y = dfFeature.tail(1)
     y = y.drop(columns='Adj Close')
@@ -481,110 +453,15 @@ final['yPrice_Up_Binary']=y_pred['Price_Up_Binary']
 final
 ###################
 
-
-dftest['Price_Change'] = dftest['Adj Close'].diff()
-dftest['Price_Up_Binary'] = (dftest['Price_Change'] > 0).astype(int)
-
-y_pred['Price_Change']=y_pred['Adj Close'].diff()
-y_pred['Price_Up_Binary']=(y_pred['Price_Change'] > 0).astype(int)
-
-
-
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-import numpy as np
-
-# Upewnij się, że dftest i y_pred mają już kolumny 'Price_Up_Binary'
-# (jak pokazałeś w swoim ostatnim kodzie)
-
-# --- Sprawdzenie zgodności indeksów i długości (bardzo ważne!) ---
-# Jeśli indeksy nie są idealnie zgodne, metryki będą błędne.
-# Użyj .align() lub upewnij się, że są równe.
-if not dftest['Price_Up_Binary'].index.equals(y_pred['Price_Up_Binary'].index):
-    print("Ostrzeżenie: Indeksy dftest['Price_Up_Binary'] i y_pred['Price_Up_Binary'] nie są zgodne!")
-    print("Spróbuję wyrównać dane...")
-
-    # Wyrównaj Series na podstawie wspólnego indeksu
-    common_index = dftest['Price_Up_Binary'].index.intersection(y_pred['Price_Up_Binary'].index)
-
-    actual_direction = dftest['Price_Up_Binary'].loc[common_index]
-    predicted_direction = y_pred['Price_Up_Binary'].loc[common_index]
-
-    if len(common_index) == 0:
-        print("Błąd: Brak wspólnych dat do oceny kierunku ruchu.")
-        # Możesz tutaj rzucić wyjątek lub zakończyć funkcję
-    else:
-        print(f"Wyrównano dane. Liczba wspólnych punktów: {len(common_index)}")
-else:
-    actual_direction = dftest['Price_Up_Binary']
-    predicted_direction = y_pred['Price_Up_Binary']
-
-# --- Ocena Klasyfikacji Binarnej (kierunku ruchu) ---
-print("\n--- Ocena przewidywania kierunku ruchu (klasyfikacja binarna) ---")
-
-# 1. Dokładność (Accuracy)
-accuracy = accuracy_score(actual_direction, predicted_direction)
-print(f"Accuracy (Dokładność przewidywania kierunku): {accuracy:.4f}")
-
-# 2. Precyzja (Precision) - ile z przewidzianych wzrostów było faktycznie wzrostami (dla klasy '1' - wzrost)
-# Parametr 'pos_label=1' oznacza, że interesuje nas klasa pozytywna (wzrost)
-precision = precision_score(actual_direction, predicted_direction, pos_label=1, zero_division=0)
-print(f"Precision (Dla wzrostu - '1'): {precision:.4f} (Ile z przewidzianych wzrostów to faktyczne wzrosty)")
-
-# 3. Czułość/Recall (Sensitivity) - ile z rzeczywistych wzrostów zostało poprawnie przewidzianych
-recall = recall_score(actual_direction, predicted_direction, pos_label=1, zero_division=0)
-print(f"Recall (Dla wzrostu - '1'): {recall:.4f} (Ile rzeczywistych wzrostów zostało wykrytych)")
-
-# 4. F1-Score
-f1 = f1_score(actual_direction, predicted_direction, pos_label=1, zero_division=0)
-print(f"F1-Score (Dla wzrostu - '1'): {f1:.4f}")
-
-# 5. Macierz pomyłek (Confusion Matrix)
-# [[Prawdziwe Negatywy (TN), Fałszywe Pozytywy (FP)],
-#  [Fałszywe Negatywy (FN), Prawdziwe Pozytywy (TP)]]
-conf_matrix = confusion_matrix(actual_direction, predicted_direction)
-print("\nMacierz Pomyłek:")
-print(conf_matrix)
-
-# Interpretacja Macierzy Pomyłek:
-# conf_matrix[0,0] - True Negatives (TN): Rzeczywisty spadek przewidziany jako spadek
-# conf_matrix[0,1] - False Positives (FP): Rzeczywisty spadek przewidziany jako wzrost (Błąd Typu I)
-# conf_matrix[1,0] - False Negatives (FN): Rzeczywisty wzrost przewidziany jako spadek (Błąd Typu II)
-# conf_matrix[1,1] - True Positives (TP): Rzeczywisty wzrost przewidziany jako wzrost
-print("\nInterpretacja Macierzy Pomyłek:")
-print(f"  Prawdziwe Negatywy (TN - Spadek poprawnie przewidziany): {conf_matrix[0,0]}")
-print(f"  Fałszywe Pozytywy (FP - Spadek przewidziany jako wzrost): {conf_matrix[0,1]}")
-print(f"  Fałszywe Negatywy (FN - Wzrost przewidziany jako spadek): {conf_matrix[1,0]}")
-print(f"  Prawdziwe Pozytywy (TP - Wzrost poprawnie przewidziany): {conf_matrix[1,1]}")
-
-
-
-
-
-
-
-
-
-dftest['Price_Change'] = dftest['Adj Close'].diff()
-dftest['Price_Up_Binary'] = (dftest['Price_Change'] > 0).astype(int)
-
-y_pred['Price_Change']=y_pred['Adj Close'].diff()
-y_pred['Price_Up_Binary']=(y_pred['Price_Change'] > 0).astype(int)
-
-results =  {"R²": [], "MAE": [], "RMSE": []}
-results['R²'].append(r2_score(dftest, y_pred))
-results['MAE'].append(mean_absolute_error(dftest, y_pred))
-results['RMSE'].append(np.sqrt(mean_squared_error(dftest, y_pred))) # Poprawione na MSE
-
-
 def Visu(y_test,y_pred_test,model_name):
 
     if isinstance(y_test, pd.Series) and isinstance(y_test.index, pd.DatetimeIndex):
         plt.figure(figsize=(15, 6))
         plt.plot(y_test.index, y_test, label='Rzeczywiste wartości wolumenu (Test)', color='blue')
         plt.plot(y_test.index, y_pred_test, label='Przewidywane wartości wolumenu (Test)', color='red', linestyle='--')
-        plt.title(f'Trend Wolumenu i Predykcje {model_name} na zbiorze testowym')
+        plt.title(f'Predykcje Ceny na modelu {model_name} na zbiorze testowym')
         plt.xlabel('Data')
-        plt.ylabel('Wolumen')
+        plt.ylabel('Cena')
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
@@ -600,4 +477,5 @@ def Visu(y_test,y_pred_test,model_name):
 
 
 
-Visu(dftest.squeeze(), y_pred, 'Kawior')
+Visu(dftest['Adj Close'], y_pred['Adj Close'], 'HuberRegressor')
+
