@@ -93,7 +93,7 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
 
 ### Uruchomienie aplikacji
 
-Po pomyślnej instalacji zależności możesz uruchomić aplikację Flask. Zakładając, że główny plik aplikacji to `app.py`, wykonaj polecenie:
+Po pomyślnej instalacji zależności możesz uruchomić aplikację FastAPI.
 
 ```bash
 uvicorn main:app --reload
