@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt # Do funkcji Visu
 
 
 
-
 def SaveTheBest():
     results = {}
     best_models_estimators = {}
@@ -25,16 +24,14 @@ def SaveTheBest():
     data.set_index(columndate, inplace=True)
     data = data[:'2024-11-29']
 
-    # --- Krok 1: Generowanie cech i etykiet (X, y) ---
-    # To jest kluczowe! Upewnij się, że 'Adj Close' w 'data' nie jest modyfikowane PRZED tym krokiem
-    # i że Features2 zwraca oczekiwane wartości.
+
     df_with_features, _ = Features2(data, data.index.max() + pd.Timedelta(days=1))
 
-    # Usuń wiersze z NaN, które Features2 mogło wygenerować na początku
+  
     df_with_features = df_with_features.dropna()
 
     X = df_with_features.drop(columns='Adj Close')
-    y = df_with_features['Adj Close'] # Y POWINNO BYĆ TUTAJ W ORYGINALNEJ SKALI CEN AKCJI
+    y = df_with_features['Adj Close'] 
 
     # --- Krok 2: Diagnostyka Y przed treningiem ---
     print("\n--- Diagnostyka zmiennej celu (y) przed treningiem ---")
@@ -119,14 +116,12 @@ def SaveTheBest():
     print(f"Średnia predykcji: {np.mean(y_pred_test_original_scale)}")
     print("----------------------------------------------------------------------\n")
 
-    # Zgodnie z założeniami, że y_train nie było skalowane,
-    # y_pred_test_original_scale JUŻ POWINNO BYĆ w oryginalnej skali.
-    # Brak tutaj inverse_transform, chyba że diagnostyka pokaże inaczej.
+
 
     results[model_name] = {
         'best_params': grid_search_Huber_reg.best_params_,
         'cv_rmse': np.sqrt(-grid_search_Huber_reg.best_score_),
-        # Ważne: r2_score wymaga, aby obie wartości były w tej samej skali
+  
         'cv_r2': r2_score(y_train, grid_search_Huber_reg.best_estimator_.predict(X_train)),
         'test_rmse': np.sqrt(mean_squared_error(y_test, y_pred_test_original_scale)),
         'test_r2': r2_score(y_test, y_pred_test_original_scale)
@@ -136,8 +131,7 @@ def SaveTheBest():
     print(f"RMSE (CV): {results[model_name]['cv_rmse']:.4f}, R2 (CV): {results[model_name]['cv_r2']:.4f}")
     print(f"RMSE (Test - w oryginalnej skali): {results[model_name]['test_rmse']:.4f}, R2 (Test - w oryginalnej skali): {results[model_name]['test_r2']:.4f}")
 
-    # --- Krok 6: Wizualizacja ---
-    # Wizualizacja na wartościach w oryginalnej skali
+
 
 
     return results, best_models_estimators

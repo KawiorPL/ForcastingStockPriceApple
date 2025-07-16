@@ -49,7 +49,7 @@ def EDA():
     """
     Wykonuje podstawową analizę eksploracyjną danych (EDA) dla danych Apple Stock.
     Zwraca podsumowanie danych w formacie słownikowym (listy słowników)
-    oraz wykresy (histogramy i box ploty) w formacie Base64,
+    oraz wykresy (histogramy, box ploty itp) w formacie Base64,
     bez przeprowadzania logarytmizacji danych.
     """
 
@@ -446,8 +446,7 @@ def SaveTheBest():
     data = data[:'2024-11-29']
 
     # --- Krok 1: Generowanie cech i etykiet (X, y) ---
-    # To jest kluczowe! Upewnij się, że 'Adj Close' w 'data' nie jest modyfikowane PRZED tym krokiem
-    # i że Features2 zwraca oczekiwane wartości.
+
     df_with_features, _ = Features2(data, data.index.max() + pd.Timedelta(days=1))
 
     # Usuń wiersze z NaN, które Features2 mogło wygenerować na początku
@@ -506,7 +505,7 @@ def SaveTheBest():
     huber_model = HuberRegressor()
     huber_pipeline = build_pipeline(huber_model)
 
-    # Sprawdź, czy X_train ma prawidłowe kolumny przed fit
+
     if not set(numeric_features).issubset(X_train.columns):
         print(f"Błąd: Nie wszystkie numeryczne cechy ({list(numeric_features)}) znajdują się w X_train. Dostępne: {list(X_train.columns)}")
         return results, best_models_estimators
@@ -539,14 +538,12 @@ def SaveTheBest():
     print(f"Średnia predykcji: {np.mean(y_pred_test_original_scale)}")
     print("----------------------------------------------------------------------\n")
 
-    # Zgodnie z założeniami, że y_train nie było skalowane,
-    # y_pred_test_original_scale JUŻ POWINNO BYĆ w oryginalnej skali.
-    # Brak tutaj inverse_transform, chyba że diagnostyka pokaże inaczej.
+
 
     results[model_name] = {
         'best_params': grid_search_Huber_reg.best_params_,
         'cv_rmse': np.sqrt(-grid_search_Huber_reg.best_score_),
-        # Ważne: r2_score wymaga, aby obie wartości były w tej samej skali
+
         'cv_r2': r2_score(y_train, grid_search_Huber_reg.best_estimator_.predict(X_train)),
         'test_rmse': np.sqrt(mean_squared_error(y_test, y_pred_test_original_scale)),
         'test_r2': r2_score(y_test, y_pred_test_original_scale)
@@ -566,23 +563,7 @@ def SaveTheBest():
 
 
 def Features2(df_original, day):
-    """
-    Generuje cechy (features) dla DataFrame na podstawie kolumny 'Adj Close'.
-    Funkcja tworzy nowe kolumny cech bezpośrednio w modyfikowanym DataFrame.
 
-    Args:
-        df_original (pd.DataFrame): Oryginalny DataFrame zawierający kolumnę 'Adj Close'
-                                    z indeksem typu DatetimeIndex.
-        days_lookback_value (int, optional): Wartość 'day' używana np. do określenia
-                                             okna średniej kroczącej. W tej funkcji nie jest
-                                             bezpośrednio używana w każdej cesze,
-                                             ale może być przydatna dla innych cech.
-                                             Domyślnie None.
-
-    Returns:
-        pd.DataFrame: DataFrame z dodanymi kolumnami cech.
-                      Jeśli brakuje danych do obliczenia cechy, będzie tam NaN.
-    """
 
     df = df_original.copy() # Pracujemy na kopii, aby nie modyfikować oryginalnego DataFrame'u
 
@@ -701,23 +682,7 @@ def Features2(df_original, day):
 
 
 def Features(df_original, day):
-    """
-    Generuje cechy (features) dla DataFrame na podstawie kolumny 'Adj Close'.
-    Funkcja tworzy nowe kolumny cech bezpośrednio w modyfikowanym DataFrame.
-
-    Args:
-        df_original (pd.DataFrame): Oryginalny DataFrame zawierający kolumnę 'Adj Close'
-                                    z indeksem typu DatetimeIndex.
-        days_lookback_value (int, optional): Wartość 'day' używana np. do określenia
-                                             okna średniej kroczącej. W tej funkcji nie jest
-                                             bezpośrednio używana w każdej cesze,
-                                             ale może być przydatna dla innych cech.
-                                             Domyślnie None.
-
-    Returns:
-        pd.DataFrame: DataFrame z dodanymi kolumnami cech.
-                      Jeśli brakuje danych do obliczenia cechy, będzie tam NaN.
-    """
+   
 
     df = df_original.copy() # Pracujemy na kopii, aby nie modyfikować oryginalnego DataFrame'u
 
@@ -788,15 +753,8 @@ def Model():
     # Lista do zbierania ogólnych komunikatów tekstowych (nie tabelarycznych)
     resultsM["text_model"] = []
 
-
     
-
-
-
     #x, model=SaveTheBest()
-
-
-
 
     resultsM["text_model"].append("Pobranie danych do przetworzenia przez model. \n")
     Maindata = pd.read_csv('data/apple_stock.csv')
@@ -842,11 +800,6 @@ def Model():
         except Exception as e:
             print(f"Błąd podczas ładowania modelu: {e}")
             print("Upewnij się, że plik .pkl jest poprawny i nie jest uszkodzony.")
-
-
-
-
-
 
 
 

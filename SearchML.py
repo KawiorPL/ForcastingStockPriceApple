@@ -174,7 +174,7 @@ preprocessor=ColumnTransformer(
 )
 
 def build_pipeline(model):
-    return Pipeline(steps=[('preprocessor', preprocessor),  # Zakładam, że 'preprocessor' jest zdefiniowany wcześniej
+    return Pipeline(steps=[('preprocessor', preprocessor),  
                             ('regressor', model)])
 
 results = {}
@@ -222,7 +222,7 @@ param_Lasso = {
 }
 lasso_model = Lasso(random_state=42)
 lasso_pipeline = build_pipeline(lasso_model)
-grid_search_Lasso_reg = GridSearchCV(lasso_pipeline, param_Lasso, cv=tscv, verbose=0, scoring='neg_mean_squared_error') # Jeśli chcesz r2 w CV, dodaj 'r2' do listy scoring
+grid_search_Lasso_reg = GridSearchCV(lasso_pipeline, param_Lasso, cv=tscv, verbose=0, scoring='neg_mean_squared_error') 
 grid_search_Lasso_reg.fit(X_train, y_train)
 
 model_name = 'Lasso'
@@ -230,7 +230,7 @@ y_pred_test = grid_search_Lasso_reg.best_estimator_.predict(X_test)
 results[model_name] = {
     'best_params': grid_search_Lasso_reg.best_params_,
     'cv_rmse': np.sqrt(-grid_search_Lasso_reg.best_score_),
-    'cv_r2': r2_score(y_train, grid_search_Lasso_reg.best_estimator_.predict(X_train)), # Opcjonalnie: oblicz r2 na zbiorze treningowym używanym do CV
+    'cv_r2': r2_score(y_train, grid_search_Lasso_reg.best_estimator_.predict(X_train)), 
     'test_rmse': np.sqrt(mean_squared_error(y_test, y_pred_test)),
     'test_r2': r2_score(y_test, y_pred_test)
 }
