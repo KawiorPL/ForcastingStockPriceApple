@@ -1,27 +1,27 @@
 # ForcastingStockPriceApple
 
-[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Maintenance](https://img.shields.io/badge/Maintained-yes-green.svg)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+
 
 ForcastingStockPriceApple ($AAPL)
 Ten projekt ma na celu opracowanie i wdrożenie robustnego modelu uczenia maszynowego (ML) do prognozowania przyszłej ceny akcji spółki Apple Inc. ($AAPL).
 
 Ewolucja Projektu i Zakres
-Początkowo projekt eksplorował zarówno metodologie Uczenia Maszynowego (ML), jak i Głebokiego Uczenia (DL). Jednakże, po gruntownej analizie i eksperymentach, modele Głebokiego Uczenia zostały ostatecznie odrzucone ze względu na ich niezadowalającą wydajność w tym konkretnym zadaniu prognostycznym.
+Początkowo projekt zakładał eksplorację zarówno metodologii Uczenia Maszynowego (ML), jak i Głębokiego Uczenia (DL). Jednakże, po gruntownej analizie i eksperymentach, modele Głębokiego Uczenia zostały ostatecznie odrzucone ze względu na ich niezadowalającą wydajność w tym konkretnym zadaniu prognostycznym. 
+Warto zaznaczyć, że użytkownik w aplikacji ma dostęp do wizualizacji modeli Głębokiego Uczenia – LSTM i GRU. Prace nad ich implementacją i optymalizacją będą kontynuowane w przyszłości.
 
 Ponadto, wczesna hipoteza zakładała dwuetapową predykcję: najpierw prognozowanie wolumenu obrotu, a następnie wykorzystanie tej prognozy do przewidywania ceny zamknięcia. Obszerne analizy i testy wykazały, że to podejście nie było skuteczne i negatywnie wpływało na dokładność prognoz cen. W związku z tym, komponent prognozowania wolumenu został usunięty z głównego zakresu projektu.
 
-Chociaż eksploracje w zakresie Deep Learning i prognozowania wolumenu mogły zostawić ślady w kodzie, obecna, finalna wersja projektu koncentruje się wyłącznie na prognozowaniu ceny akcji za pomocą metod ML. Użytkownicy zainteresowani mogą jednak wykorzystać te wstępne fragmenty kodu do własnych eksperymentów lub innych celów.
+Finalna wersja projektu koncentruje się wyłącznie na prognozowaniu ceny akcji za pomocą metod ML. Użytkownicy zainteresowani mogą jednak wykorzystać te wstępne fragmenty kodu DL do własnych eksperymentów lub innych celów.
 
-
-Oto poprawiona wersja z lepszą gramatyką i klarownością, zachowując esencję Twoich myśli:
 
 Kluczowe Funkcjonalności
 Modelowanie Ceny Akcji: Głównym rezultatem projektu jest wytrenowany model uczenia maszynowego, zdolny do bezpośredniej predykcji cen zamknięcia akcji.
 Horyzont Predykcji: Model oferuje prognozy ceny na horyzoncie 30 dni. Należy jednak zaznaczyć, że jest to prognoza dla następnego dnia handlowego, którą można odświeżać codziennie.
-Zastosowanie w Handlu: Dzięki zdolności modelu do przewidywania jutrzejszej ceny oraz informowania o przewidywanym wzroście lub spadku ceny, projekt ten może znaleźć zastosowanie zarówno dla daytraderów, jak i spekulantów.
-Ten projekt stanowi praktyczną demonstrację zastosowania technik ML w prognozowaniu szeregów czasowych w dziedzinie finansów, z naciskiem na realną użyteczność i efektywność.
+
+**Zastosowanie w Handlu**: 
+Dzięki zdolności modelu do przewidywania jutrzejszej ceny oraz informowania o przewidywanym wzroście lub spadku ceny, projekt ten może znaleźć zastosowanie zarówno dla daytraderów oraz innych inwestorów w spółkę Apple, jak i spekulantów.
+
 
 
 ## Instalacja
