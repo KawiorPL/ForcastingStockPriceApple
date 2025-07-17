@@ -100,11 +100,11 @@ uvicorn main:app --reload
 ```
 Aplikacja będzie gotowa do użycia, gdy zobaczysz poniższy komunikat. Następnie kliknij link http://127.0.0.1:8000, aby otworzyć aplikację w przeglądarce.
 
-colorgreentextINFO: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-colorgreentextINFO: Started reloader process [11420] using WatchFiles
-colorgreentextINFO: Started server process [3940]
-colorgreentextINFO: Waiting for application startup.
-colorgreentextINFO: Application startup complete.
+<span style="color: green;">INFO</span>: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+<span style="color: green;">INFO</span>: Started reloader process [11420] using WatchFiles
+<span style="color: green;">INFO</span>: Started server process [3940]
+<span style="color: green;">INFO</span>: Waiting for application startup.
+<span style="color: green;">INFO</span>: Application startup complete.
 
 
 ```
