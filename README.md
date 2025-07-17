@@ -80,7 +80,7 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
 
     Po aktywacji środowiska nazwa środowiska (`(Apple_env)` lub `(venv)`) powinna pojawić się na początku linii poleceń.
 
-4.  **Zainstaluj zależności:**
+4.  **Zainstaluj biblioteki:**
 
     Po aktywowaniu środowiska przejdź do folderu `ForcastingStockPriceApple` (jeśli jeszcze tam nie jesteś) i zainstaluj wymagane biblioteki z pliku `requirements.txt`:
 
@@ -93,15 +93,21 @@ Poniższe kroki opisują, jak zainstalować i uruchomić aplikację na Twoim lok
 
 ### Uruchomienie aplikacji
 
-Po pomyślnej instalacji zależności możesz uruchomić aplikację FastAPI.
+Po pomyślnej instalacji wymaganych bibliotek możesz uruchomić aplikację FastAPI. W terminalu użyj następującej komendy:
 
 ```bash
 uvicorn main:app --reload
+```
+Aplikacja będzie gotowa do użycia, gdy zobaczysz poniższy komunikat. Następnie kliknij link http://127.0.0.1:8000, aby otworzyć aplikację w przeglądarce.
+
+colorgreentextINFO: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+colorgreentextINFO: Started reloader process [11420] using WatchFiles
+colorgreentextINFO: Started server process [3940]
+colorgreentextINFO: Waiting for application startup.
+colorgreentextINFO: Application startup complete.
 
 
-
-
-
+```
 echo "# ForcastingStockPriceApple" >> README.md
 git init
 git add README.md
@@ -109,3 +115,4 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin git@github.com:KawiorPL/ForcastingStockPriceApple.git
 git push -u origin main
+```
