@@ -98,13 +98,13 @@ Po pomyślnej instalacji wymaganych bibliotek możesz uruchomić aplikację Fast
 ```bash
 uvicorn main:app --reload
 ```
-Aplikacja będzie gotowa do użycia, gdy zobaczysz poniższy komunikat. Następnie kliknij link http://127.0.0.1:8000, aby otworzyć aplikację w przeglądarce.
+Gdy zobaczysz poniższe komunikaty w konsoli, oznacza to, że aplikacja jest gotowa do użycia. Następnie kliknij link http://127.0.0.1:8000, aby otworzyć aplikację w przeglądarce.
 
-<span style="color: green;">INFO</span>: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-<span style="color: green;">INFO</span>: Started reloader process [11420] using WatchFiles
-<span style="color: green;">INFO</span>: Started server process [3940]
-<span style="color: green;">INFO</span>: Waiting for application startup.
-<span style="color: green;">INFO</span>: Application startup complete.
+<span style="color: green;">INFO</span>: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)<br>
+<span style="color: green;">INFO</span>: Started reloader process [11420] using WatchFiles<br>
+<span style="color: green;">INFO</span>: Started server process [3940]<br>
+<span style="color: green;">INFO</span>: Waiting for application startup.<br>
+<span style="color: green;">INFO</span>: Application startup complete.<br>
 
 
 ```
